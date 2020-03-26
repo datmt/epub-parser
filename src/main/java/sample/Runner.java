@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.rmi.server.ExportException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,26 +22,62 @@ public class Runner {
     public static void main(String[] args) {
 
 
-        File epubFolder = new File("/Users/myn/Desktop/epub");
+        File epubFolder = new File("C:\\books");
 
         File[] books = epubFolder.listFiles();
+
+        System.out.println("Got " + books.length + " books");
 
         for (File f : books)
         {
             if (f.getName().endsWith(".epub"))
             {
 
-                Book book = EpubHelper.getBook(f.getAbsolutePath());
+                try {
 
-                String text = EpubHelper.readBookToString(book);
 
-                String source = book.getTitle() + " - " + book.getMetadata().getAuthors().toString();
+                    Book book = EpubHelper.getBook(f.getAbsolutePath());
 
-                for (String p : WordHelpers.textToParagraphs(text))
-                    DB.insertParagraph(p, source);
+                    String text = EpubHelper.readBookToString(book);
 
-                for (String s : WordHelpers.textToSentences(text))
-                    DB.insertSentence(s, source);
+                    String source = book.getTitle() + " - " + book.getMetadata().getAuthors().toString();
+
+                    for (String p : WordHelpers.textToParagraphs(text))
+                    {
+
+                        if (p.length() > 125)
+                        {
+                            System.out.println("inserting paragraph: " + p);
+                            try {
+                                DB.insertParagraph(p, source);
+                            } catch (Exception ex)
+                            {
+                                ex.printStackTrace();
+                            }
+
+                        }
+                    }
+
+                    for (String s : WordHelpers.textToSentences(text))
+                    {
+
+                        if (s.length() > 25)
+                        {
+                            System.out.println("inserting sentence: " + s);
+                            try {
+                                DB.insertSentence(s, source);
+                            } catch (Exception ex)
+                            {
+                                ex.printStackTrace();
+                            }
+                        }
+
+                    }
+
+                } catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                }
 
             }
         }

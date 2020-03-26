@@ -6,7 +6,8 @@ import java.util.Map;
 
 public class DB {
 
-    private static final String DB_URL = "jdbc:sqlite:/Users/myn/Documents/lab/words.db";
+    //private static final String DB_URL = "jdbc:sqlite:/Users/myn/Documents/lab/words.db";
+    private static final String DB_URL = "jdbc:sqlite:\\D:\\PROJECTS\\sentences.db";
 
     private static Connection connection;
 
@@ -137,8 +138,8 @@ public class DB {
     public static void createTables() throws SQLException
     {
         String createWordTable = "CREATE TABLE IF NOT EXISTS words_frequency(id integer primary key autoincrement, word text not null, frequency integer not null default 1)";
-        String createSentencesTable = "CREATE TABLE IF NOT EXISTS sentences(id integer primary key autoincrement, sentence text not null, source text)";
-        String createParagraphTable = "CREATE TABLE IF NOT EXISTS paragraphs(id integer primary key autoincrement, paragraph text not null, source text)";
+        String createSentencesTable = "CREATE TABLE IF NOT EXISTS sentences(id integer primary key autoincrement, sentence text not null, source text, unique(sentence))";
+        String createParagraphTable = "CREATE TABLE IF NOT EXISTS paragraphs(id integer primary key autoincrement, paragraph text not null, source text, unique(paragraph))";
 
         String[] createQueries = new String[]{
                 createWordTable,

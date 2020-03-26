@@ -30,7 +30,9 @@ public class WordHelpers {
     {
         String[] paraps = text.split("(?m)(?=^\\s{4})");
 
-        return (String[])Arrays.stream(paraps).filter(x -> x.length() > 30).toArray();
+        return paraps;
+
+        //return (String[])Arrays.stream(paraps).filter(x -> x.length() > 30).toArray();
     }
 
     public static ArrayList<String> textToSentences(String text)
