@@ -29,8 +29,19 @@ public class Runner {
         {
             if (f.getName().endsWith(".epub"))
             {
-                String text = EpubHelper.readEpub(f.getAbsolutePath());
-                updateWC(text);
+
+                Book book = EpubHelper.getBook(f.getAbsolutePath());
+
+                String text = EpubHelper.readBookToString(book);
+
+                String source = book.getTitle() + " - " + book.getMetadata().getAuthors().toString();
+
+                for (String p : WordHelpers.textToParagraphs(text))
+                    DB.insertParagraph(p, source);
+
+                for (String s : WordHelpers.textToSentences(text))
+                    DB.insertSentence(s, source);
+
             }
         }
 

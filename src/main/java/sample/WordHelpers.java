@@ -28,7 +28,7 @@ public class WordHelpers {
 
     public static String[] textToParagraphs(String text)
     {
-        String[] paraps = text.split("\n");
+        String[] paraps = text.split("(?m)(?=^\\s{4})");
 
         return (String[])Arrays.stream(paraps).filter(x -> x.length() > 30).toArray();
     }
